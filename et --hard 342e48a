@@ -1,0 +1,20 @@
+[33mc3658c7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{0}: rebase (finish): returning to refs/heads/master
+[33mc3658c7[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m HEAD@{1}: rebase (pick): removed
+[33m342e48a[m HEAD@{2}: rebase (start): checkout HEAD~4
+[33m04b7ecb[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{3}: rebase (abort): returning to refs/heads/master
+[33m342e48a[m HEAD@{4}: rebase (start): checkout HEAD~4
+[33m04b7ecb[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{5}: rebase (finish): returning to refs/heads/master
+[33m04b7ecb[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{6}: rebase (start): checkout HEAD~4
+[33m04b7ecb[m[33m ([m[1;31morigin/master[m[33m)[m HEAD@{7}: commit: removed
+[33m5564783[m HEAD@{8}: commit: removed file
+[33m2b55292[m HEAD@{9}: rebase (abort): returning to refs/heads/master
+[33m342e48a[m HEAD@{10}: rebase (start): checkout HEAD~2
+[33m2b55292[m HEAD@{11}: rebase (abort): returning to refs/heads/master
+[33m2b55292[m HEAD@{12}: rebase (abort): returning to refs/heads/master
+[33m2b55292[m HEAD@{13}: rebase (abort): returning to refs/heads/master
+[33m2b55292[m HEAD@{14}: rebase (abort): returning to refs/heads/master
+[33m2b55292[m HEAD@{15}: reset: moving to HEAD
+[33m2b55292[m HEAD@{16}: commit: third commit
+[33m7f7d80a[m HEAD@{17}: commit (amend): Second commit
+[33m0cfd658[m HEAD@{18}: commit: Description des modifications
+[33m342e48a[m HEAD@{19}: commit (initial): first commit
