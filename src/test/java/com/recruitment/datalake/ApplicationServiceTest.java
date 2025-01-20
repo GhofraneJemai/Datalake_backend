@@ -71,11 +71,14 @@ class ApplicationServiceTest {
 
     @Test
     public void testUpdateApplicationStatus() {
-        Application application = applicationRepository.findById(1L).orElse(null);
-        assertNotNull(application);
-        application.setStatus("APPROVED");
-        applicationRepository.save(application);
-        assertEquals("APPROVED", application.getStatus());
+
+        // Update application status
+        LocalDateTime recruitmentDate = LocalDateTime.of(2025, 2, 15, 9, 0);
+        Application updatedApplication = applicationService.updateApplicationStatus(14L, "Denied", recruitmentDate);
+
+        // Assertions
+        assertNotNull(updatedApplication);
+        assertEquals("Denied", updatedApplication.getStatus());
     }
 
     @Test

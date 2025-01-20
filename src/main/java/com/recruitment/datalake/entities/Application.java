@@ -25,13 +25,14 @@ public class Application {
     private String status = "PENDING";
 
     private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime recruitmentDate;
 	public Application() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
 
 	public Application(Candidate candidate, JobPost jobPost, String coverLetter, String cvUrl, String status,
-			LocalDateTime createdAt) {
+			LocalDateTime createdAt,LocalDateTime recruitmentDate) {
 		super();
 		this.candidate = candidate;
 		this.jobPost = jobPost;
@@ -39,6 +40,7 @@ public class Application {
 		this.cvUrl = cvUrl;
 		this.status = status;
 		this.createdAt = createdAt;
+		this.recruitmentDate = recruitmentDate;
 	}
 
 	public Long getId() {
@@ -96,6 +98,13 @@ public class Application {
 	public void setCreatedAt(LocalDateTime createdAt) {
 		this.createdAt = createdAt;
 	}
+	public LocalDateTime getRecruitmentDate() {
+        return recruitmentDate;
+    }
+
+    public void setRecruitmentDate(LocalDateTime recruitmentDate) {
+        this.recruitmentDate = recruitmentDate;
+    }
 
 	@Override
 	public String toString() {

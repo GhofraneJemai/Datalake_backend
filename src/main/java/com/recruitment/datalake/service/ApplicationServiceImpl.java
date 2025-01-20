@@ -18,13 +18,15 @@ public class ApplicationServiceImpl implements ApplicationService {
     private final ApplicationRepository applicationRepository;
     private final CandidateRepository candidateRepository;
     private final JobPostRepository jobPostRepository;
+    private final EmailService emailService;
 
     public ApplicationServiceImpl(ApplicationRepository applicationRepository, 
                                   CandidateRepository candidateRepository, 
-                                  JobPostRepository jobPostRepository) {
+                                  JobPostRepository jobPostRepository,EmailService emailService) {
         this.applicationRepository = applicationRepository;
         this.candidateRepository = candidateRepository;
         this.jobPostRepository = jobPostRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -57,4 +59,21 @@ public class ApplicationServiceImpl implements ApplicationService {
         return applicationRepository.findById(applicationId)
                 .orElseThrow(() -> new RuntimeException("Application not found"));
     }
+    public Application updateApplicationStatus(Long applicationId, String status, LocalDateTime recruitmentDate) {
+        Application application = applicationRepository.findById(applicationId)
+                .orElseThrow(() -> new RuntimeException("Application not found"));
+        if ("APPROVED".equalsIgnoreCase(status)) {
+            application.setRecruitmentDate(recruitmentDate);
+        }
+        application.setStatus(status);
+        applicationRepository.save(application);
+
+        // Send email notification to the candidate
+        emailService.sendRecruitmentResult(application.getCandidate().getEmail(), status, recruitmentDate != null ? recruitmentDate.toString() : "");
+
+        return application;
+    }
+    
+
+
 }
