@@ -21,8 +21,28 @@ public class EmployeServiceImpl implements EmployeService {
 
     @Override
     public Employe updateEmploye(Employe emp) {
-        return EmployeRepository.save(emp);
+        // Check if the employee exists
+        Employe existingEmp = EmployeRepository.findById(emp.getId()).orElse(null);
+        if (existingEmp != null) {
+            // Update the existing employee's fields
+            existingEmp.setFirstName(emp.getFirstName());
+            existingEmp.setLastName(emp.getLastName());
+            existingEmp.setEmail(emp.getEmail());
+            existingEmp.setDob(emp.getDob());
+            existingEmp.setGender(emp.getGender());
+            existingEmp.setEducation(emp.getEducation());
+            existingEmp.setCompany(emp.getCompany());
+            existingEmp.setExperience(emp.getExperience());
+            existingEmp.setSalaryPackage(emp.getSalaryPackage());
+            
+            // Save the updated employee
+            return EmployeRepository.save(existingEmp);
+        } else {
+            // If the employee doesn't exist, handle the case (optional)
+            return null;  // Or throw an exception to return a 404 error in the controller
+        }
     }
+
 
     @Override
     public void deleteEmploye(Long id) {

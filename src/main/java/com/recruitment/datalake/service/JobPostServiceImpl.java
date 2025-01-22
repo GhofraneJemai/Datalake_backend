@@ -25,4 +25,27 @@ public class JobPostServiceImpl implements JobPostService {
     public List<JobPost> getAllJobPosts() {
         return jobPostRepository.findAll();
     }
+    @Override
+    public JobPost getJobPostById(Long id) {
+        return jobPostRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public JobPost updateJobPost(Long id, JobPost jobPost) {
+        JobPost existingJobPost = jobPostRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("JobPost not found with ID: " + id));
+        existingJobPost.setTitle(jobPost.getTitle());
+        existingJobPost.setDescription(jobPost.getDescription());
+        existingJobPost.setLocation(jobPost.getLocation());
+        existingJobPost.setRequirements(jobPost.getRequirements());
+        return jobPostRepository.save(existingJobPost);
+    }
+
+    @Override
+    public void deleteJobPost(Long id) {
+        if (!jobPostRepository.existsById(id)) {
+            throw new RuntimeException("JobPost not found with ID: " + id);
+        }
+        jobPostRepository.deleteById(id);
+    }
 }

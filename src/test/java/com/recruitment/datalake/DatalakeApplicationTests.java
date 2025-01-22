@@ -34,12 +34,12 @@ class DatalakeApplicationTests {
 
     @Test
     public void testUpdateEmploye() {
-        Employe emp = EmployeRepository.findById(1L).orElse(null);
+        Employe emp = EmployeRepository.findById(13L).orElse(null);
         assertNotNull(emp);
         emp.setCompany("GlobalTech");
         EmployeRepository.save(emp);
 
-        Employe updatedEmp = EmployeRepository.findById(1L).get();
+        Employe updatedEmp = EmployeRepository.findById(13L).get();
         assertEquals("GlobalTech", updatedEmp.getCompany());
     }
 

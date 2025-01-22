@@ -36,7 +36,7 @@ class ApplicationServiceTest {
     @Test
     public void testApplyForJob() {
         // Prepare test data
-        Candidate candidate = new Candidate("jean", "Jean", "jean.johnson@example.com", "0987654321", new ArrayList<>());
+        Candidate candidate = new Candidate("Samia", "Jmii", "samiajmeii@gmail.com", "0987654321", new ArrayList<>());
         candidate = candidateRepository.save(candidate);
         
         JobPost jobPost = new JobPost("Software Engineer", 
@@ -74,11 +74,11 @@ class ApplicationServiceTest {
 
         // Update application status
         LocalDateTime recruitmentDate = LocalDateTime.of(2025, 2, 15, 9, 0);
-        Application updatedApplication = applicationService.updateApplicationStatus(14L, "Denied", recruitmentDate);
+        Application updatedApplication = applicationService.updateApplicationStatus(18L, "APPROVED", recruitmentDate);
 
         // Assertions
         assertNotNull(updatedApplication);
-        assertEquals("Denied", updatedApplication.getStatus());
+        assertEquals("APPROVED", updatedApplication.getStatus());
     }
 
     @Test
