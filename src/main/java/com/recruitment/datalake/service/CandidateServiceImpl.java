@@ -57,4 +57,8 @@ public class CandidateServiceImpl implements CandidateService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	@Override
+	public Candidate getCandidateWithApplications(Long id) {
+        return candidateRepository.findCandidateWithApplications(id);
+    }
 }

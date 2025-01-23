@@ -20,6 +20,11 @@ public class JobPostServiceImpl implements JobPostService {
     public JobPost createJobPost(JobPost jobPost) {
         return jobPostRepository.save(jobPost);
     }
+    @Override
+    public JobPost getJobPostWithApplications(Long id) {
+        return jobPostRepository.findJobPostWithApplications(id);
+    }
+
 
     @Override
     public List<JobPost> getAllJobPosts() {

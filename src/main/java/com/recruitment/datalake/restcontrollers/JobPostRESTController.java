@@ -51,5 +51,11 @@ public class JobPostRESTController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/jobposts/{id}")
+    public ResponseEntity<JobPost> getJobPost(@PathVariable Long id) {
+        JobPost jobPost = jobPostService.getJobPostWithApplications(id);
+        return ResponseEntity.ok(jobPost);
+    }
+
 }
 

@@ -5,12 +5,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -24,8 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.recruitment.datalake.entities.Application;
+import com.recruitment.datalake.entities.JobPost;
 import com.recruitment.datalake.service.ApplicationService;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequestMapping("/api/applications")
 public class ApplicationRESTController {
@@ -42,6 +47,12 @@ public class ApplicationRESTController {
             @RequestParam("coverLetter") String coverLetter,
             @RequestParam("cvFile") MultipartFile cvFile) {
 
+        System.out.println("Received application request:");
+        System.out.println("Candidate ID: " + candidateId);
+        System.out.println("Job Post ID: " + jobPostId);
+        System.out.println("Cover Letter: " + coverLetter);
+        System.out.println("CV File Name: " + cvFile.getOriginalFilename());
+
         try {
             String fileName = UUID.randomUUID().toString() + "_" + cvFile.getOriginalFilename();
             Path filePath = Paths.get(UPLOAD_DIR, fileName);
@@ -52,16 +63,14 @@ public class ApplicationRESTController {
 
             return ResponseEntity.ok("Application submitted successfully!");
         } catch (IOException e) {
+            System.err.println("Error saving CV file: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Failed to upload CV.");
         }
     }
 
     // Endpoint to get all applications
-    @GetMapping
-    public List<Application> getAllApplications() {
-        return applicationService.getAllApplications();
-    }
+
     @GetMapping("/{id}")
     public Application getApplicationById(@PathVariable Long id) {
         return applicationService.getApplicationById(id);
@@ -75,5 +84,47 @@ public class ApplicationRESTController {
         Application updatedApplication = applicationService.updateApplicationStatus(id, status, recruitmentDateTime);
         return ResponseEntity.ok(updatedApplication);
     }
+    @GetMapping("/by-candidate")
+    public ResponseEntity<List<Application>> getApplicationsByCandidateId(@RequestParam Long candidateId) {
+        List<Application> applications = applicationService.getApplicationsByCandidateId(candidateId);
+        return ResponseEntity.ok(applications);
+    }
+    @GetMapping("/grouped-by-job-post")
+    public ResponseEntity<Map<JobPost, List<Application>>> getApplicationsGroupedByJobPost() {
+        try {
+            List<Application> allApplications = applicationService.getAllApplications();
+
+            if (allApplications.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyMap());
+            }
+
+            // Ensure all applications are grouped by a non-null JobPost
+            Map<JobPost, List<Application>> groupedApplications = allApplications.stream()
+                    .filter(application -> application.getJobPost() != null) // Filter out applications with null jobPost
+                    .collect(Collectors.groupingBy(Application::getJobPost));
+
+            if (groupedApplications.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.emptyMap());
+            }
+
+            // Log for debugging purposes
+            System.out.println("Grouped Applications: " + groupedApplications);
+
+            return ResponseEntity.ok(groupedApplications);
+
+        } catch (Exception e) {
+            e.printStackTrace(); // Log error for further debugging
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
+    @GetMapping("/all")
+    public Map<JobPost, List<Application>> getApplicationsGroupedBy() {
+        return applicationService.getApplicationsGroupedByJobPostWithCandidates();
+    }
+    @GetMapping
+    public List<Application> getAllApplications() {
+        return applicationService.getAllApplicationsWithDetails();
+    }
+
 
 }

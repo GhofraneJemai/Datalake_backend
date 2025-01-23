@@ -2,6 +2,8 @@ package com.recruitment.datalake.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -73,7 +75,26 @@ public class ApplicationServiceImpl implements ApplicationService {
 
         return application;
     }
-    
+    @Override
+    public List<Application> getApplicationsByCandidateId(Long candidateId) {
+        return applicationRepository.findByCandidate_Id(candidateId);
+    }
 
+    @Override
+    public Map<JobPost, List<Application>> getApplicationsGroupedByJobPostWithCandidates() {
+        List<Application> allApplications = applicationRepository.findAllApplicationsWithCandidateAndJobPost();
+        return allApplications.stream()
+                .collect(Collectors.groupingBy(Application::getJobPost));
+    }
+    @Override
+    public List<Application> getAllApplicationsWithDetails() {
+        return applicationRepository.findAllApplicationsWithCandidateAndJobPost();
+    }
+
+	@Override
+	public Map<JobPost, List<Application>> getApplicationsGroupedByJobPost() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

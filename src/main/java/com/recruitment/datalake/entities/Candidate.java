@@ -4,6 +4,8 @@ package com.recruitment.datalake.entities;
 import jakarta.persistence.*;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 @Entity
 public class Candidate {
 
@@ -16,7 +18,8 @@ public class Candidate {
     private String email;
     private String phone;
 
-    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL) 
+    @OneToMany(mappedBy = "candidate", cascade = CascadeType.ALL)
+    @JsonBackReference 
     private List<Application> applications;
 
 	public Candidate() {

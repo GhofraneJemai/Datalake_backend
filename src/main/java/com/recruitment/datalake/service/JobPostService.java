@@ -14,4 +14,6 @@ public interface JobPostService {
     JobPost getJobPostById(Long id);
 
     void deleteJobPost(Long id);
+
+	JobPost getJobPostWithApplications(Long id);
 }

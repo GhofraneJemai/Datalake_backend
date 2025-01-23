@@ -19,4 +19,6 @@ public interface CandidateService {
     List<Candidate> findByFirstName(String firstName);
 
     List<Candidate> findByCompany(String company);
+
+	Candidate getCandidateWithApplications(Long id);
 }

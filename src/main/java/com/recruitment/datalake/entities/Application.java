@@ -11,9 +11,9 @@ public class Application {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "candidate_id")
-    @JsonBackReference // Prevent circular reference while serializing
+    // Prevent circular reference while serializing
     private Candidate candidate;
 
     @ManyToOne
