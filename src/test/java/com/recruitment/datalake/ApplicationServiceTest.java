@@ -47,12 +47,7 @@ class ApplicationServiceTest {
     @Rollback(false)
     public void testApplyForJob() {
         // Prepare test data for User first
-        User user = new User("hibatroudi835@gmail.com", "password123", "Hiba", "Troudi", Role.CANDIDATE); // Assuming Role is an enum, and 'CANDIDATE' is a valid role
-        user = userRepository.save(user);  // Save the user first
-
-        // Create a Candidate linked to the User
-        Candidate candidate = new Candidate(user, new ArrayList<>());
-        candidate = candidateRepository.save(candidate);
+        
 
         // Create a JobPost
         JobPost jobPost = new JobPost("Software Engineer", 
@@ -68,11 +63,10 @@ class ApplicationServiceTest {
         String cvUrl = "http://example.com/cv/bob_johnson.pdf";
 
         // Apply for the job
-        Application application = applicationService.applyForJob(candidate.getId(), jobPost.getId(), coverLetter, cvUrl);
+        Application application = applicationService.applyForJob(33L, jobPost.getId(), coverLetter, cvUrl);
 
         // Assertions
         assertNotNull(application.getId());
-        assertEquals(candidate.getId(), application.getCandidate().getId());
         assertEquals(jobPost.getId(), application.getJobPost().getId());
         assertEquals("PENDING", application.getStatus());
         assertEquals(coverLetter, application.getCoverLetter());

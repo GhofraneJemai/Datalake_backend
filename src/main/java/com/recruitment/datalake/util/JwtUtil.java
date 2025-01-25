@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.recruitment.datalake.entities.Candidate;
 import com.recruitment.datalake.entities.Role;
 import org.springframework.stereotype.Component;
 
@@ -16,16 +17,19 @@ public class JwtUtil {
     private final long expirationTime = 86400000; // 1 day in milliseconds
 
     // Generate a JWT token
-    public String generateToken(String email, Role role) {
-        Algorithm algorithm = Algorithm.HMAC256(secretKey); // Use the HMAC algorithm with the secret key
+ // Generate a JWT token with user ID
+    public String generateToken(String email, Role role, Long userId) {
+        Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
         return JWT.create()
                 .withSubject(email) // Set the subject (email)
-                .withClaim("role", role.name()) // Add custom claims, e.g. role
-                .withIssuedAt(new Date()) // Set the issue date
-                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime)) // Set the expiration time
-                .sign(algorithm); // Sign the token
+                .withClaim("role", role.name()) // Add role as a custom claim
+                .withClaim("userId", userId) // Add userId as a custom claim
+                .withIssuedAt(new Date()) // Set issue date
+                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime)) // Set expiration date
+                .sign(algorithm); // Sign the token with the algorithm
     }
+
 
     // Extract claims from the JWT token
     public DecodedJWT extractClaims(String token) {
@@ -53,5 +57,12 @@ public class JwtUtil {
             return false; // Return false if the token is invalid
         }
     }
+ // Extract the userId from the token
+    public Long extractUserId(String token) {
+        DecodedJWT decodedJWT = decodeJWT(token);
+        return decodedJWT.getClaim("userId").asLong(); // Extract and return the userId
+    }
+
+
     
 }

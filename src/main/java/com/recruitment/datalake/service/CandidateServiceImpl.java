@@ -15,6 +15,7 @@ public class CandidateServiceImpl implements CandidateService {
     @Autowired
     private CandidateRepository candidateRepository;
     
+    
 
     public List<Candidate> getAllCandidates() {
         return candidateRepository.findAll();
@@ -29,7 +30,6 @@ public class CandidateServiceImpl implements CandidateService {
 	public Candidate getCandidateById(Long id) {
 		return candidateRepository.findById(id).orElse(null);
 	}
-
 	@Override
 	public Candidate updateCandidate(Candidate candidate) {
 		// TODO Auto-generated method stub

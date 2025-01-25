@@ -8,9 +8,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import com.recruitment.datalake.filter.JwtRequestFilter;
-
+@CrossOrigin(origins = "http://localhost:4200")
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
@@ -30,6 +31,10 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .requestMatchers("/api/candidate/**").hasRole("CANDIDATE")
+                        .requestMatchers("/api/applications/**").permitAll()
+                        .requestMatchers("/api/candidates/**").permitAll()
+                        .requestMatchers("/api/jobposts/**").permitAll()
+                        .requestMatchers("/api/employes/**").permitAll()
   
                         .anyRequest().authenticated()
                         .and()

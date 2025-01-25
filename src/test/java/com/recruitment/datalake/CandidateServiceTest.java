@@ -57,7 +57,7 @@ class CandidateServiceTest {
 
     @Test
     public void testFindCandidateById() {
-        Candidate candidate = candidateRepository.findById(1L).orElse(null);
+        Candidate candidate = candidateRepository.findById(24L).orElse(null);
         assertNotNull(candidate);
         System.out.println(candidate.getId());
         System.out.println(candidate);
@@ -70,10 +70,11 @@ class CandidateServiceTest {
 
     @Test
     public void testDeleteCandidate() {
-        candidateRepository.deleteById(1L);
-        Candidate candidate = candidateRepository.findById(1L).orElse(null);
+        candidateRepository.deleteById(24L);
+        Candidate candidate = candidateRepository.findById(24L).orElse(null);
         assertNull(candidate);
     }
+    
     @Transactional
     @Rollback(false)
     @Test
