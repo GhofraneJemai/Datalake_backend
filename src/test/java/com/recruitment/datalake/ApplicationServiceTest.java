@@ -9,14 +9,20 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import com.recruitment.datalake.entities.Application;
 import com.recruitment.datalake.entities.Candidate;
 import com.recruitment.datalake.entities.JobPost;
+import com.recruitment.datalake.entities.Role;
+import com.recruitment.datalake.entities.User;
 import com.recruitment.datalake.repos.ApplicationRepository;
 import com.recruitment.datalake.repos.CandidateRepository;
 import com.recruitment.datalake.repos.JobPostRepository;
+import com.recruitment.datalake.repos.UserRepository;
 import com.recruitment.datalake.service.ApplicationService;
+
+import jakarta.transaction.Transactional;
 
 @SpringBootTest
 class ApplicationServiceTest {
@@ -32,13 +38,23 @@ class ApplicationServiceTest {
 
     @Autowired
     private ApplicationService applicationService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
+    @Transactional
+    @Rollback(false)
     public void testApplyForJob() {
-        // Prepare test data
-        Candidate candidate = new Candidate("Samia", "Jmii", "samiajmeii@gmail.com", "0987654321", new ArrayList<>());
+        // Prepare test data for User first
+        User user = new User("hibatroudi835@gmail.com", "password123", "Hiba", "Troudi", Role.CANDIDATE); // Assuming Role is an enum, and 'CANDIDATE' is a valid role
+        user = userRepository.save(user);  // Save the user first
+
+        // Create a Candidate linked to the User
+        Candidate candidate = new Candidate(user, new ArrayList<>());
         candidate = candidateRepository.save(candidate);
-        
+
+        // Create a JobPost
         JobPost jobPost = new JobPost("Software Engineer", 
                                       "Develop software applications", 
                                       "San Francisco, CA", 
@@ -47,6 +63,7 @@ class ApplicationServiceTest {
                                       LocalDateTime.now());
         jobPost = jobPostRepository.save(jobPost);
 
+        // Prepare cover letter and CV URL
         String coverLetter = "I am very interested in this position and believe I am a good fit.";
         String cvUrl = "http://example.com/cv/bob_johnson.pdf";
 
@@ -74,7 +91,7 @@ class ApplicationServiceTest {
 
         // Update application status
         LocalDateTime recruitmentDate = LocalDateTime.of(2025, 2, 15, 9, 0);
-        Application updatedApplication = applicationService.updateApplicationStatus(18L, "APPROVED", recruitmentDate);
+        Application updatedApplication = applicationService.updateApplicationStatus(2L, "APPROVED", recruitmentDate);
 
         // Assertions
         assertNotNull(updatedApplication);

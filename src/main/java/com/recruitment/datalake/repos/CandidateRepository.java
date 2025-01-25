@@ -12,15 +12,9 @@ import com.recruitment.datalake.entities.Candidate;
 @CrossOrigin(origins = "http://localhost:4200")
 @Repository
 public interface CandidateRepository extends JpaRepository<Candidate, Long> {
+	List<Candidate> findByUserFirstName(String firstName); 
 	@Query("SELECT c FROM Candidate c JOIN FETCH c.applications WHERE c.id = :id")
 	Candidate findCandidateWithApplications(@Param("id") Long id);
-
-	  	List<Candidate> findByFirstName(String firstName);
-	    
-	    
-	    List<Candidate> findByLastName(String lastName);
-	    
-	    List<Candidate> findByEmail(String email);
 	    
 	    
 }

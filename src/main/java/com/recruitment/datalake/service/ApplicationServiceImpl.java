@@ -71,7 +71,7 @@ public class ApplicationServiceImpl implements ApplicationService {
         applicationRepository.save(application);
 
         // Send email notification to the candidate
-        emailService.sendRecruitmentResult(application.getCandidate().getEmail(), status, recruitmentDate != null ? recruitmentDate.toString() : "");
+        emailService.sendRecruitmentResult(application.getCandidate().getUser().getEmail(), status, recruitmentDate != null ? recruitmentDate.toString() : "");
 
         return application;
     }

@@ -14,10 +14,7 @@ public class CandidateServiceImpl implements CandidateService {
 
     @Autowired
     private CandidateRepository candidateRepository;
-
-    public Candidate registerCandidate(Candidate candidate) {
-        return candidateRepository.save(candidate);
-    }
+    
 
     public List<Candidate> getAllCandidates() {
         return candidateRepository.findAll();
@@ -25,8 +22,7 @@ public class CandidateServiceImpl implements CandidateService {
 
 	@Override
 	public Candidate saveCandidate(Candidate candidate) {
-		// TODO Auto-generated method stub
-		return null;
+		return candidateRepository.save(candidate);
 	}
 
 	@Override
@@ -42,23 +38,31 @@ public class CandidateServiceImpl implements CandidateService {
 
 	@Override
 	public void deleteCandidate(Long id) {
-		// TODO Auto-generated method stub
-		
+	    // Find the candidate by id
+	    Candidate candidate = candidateRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Candidate not found"));
+	    
+	    // Delete the candidate
+	    candidateRepository.delete(candidate);
 	}
 
 	@Override
 	public List<Candidate> findByFirstName(String firstName) {
-		// TODO Auto-generated method stub
-		return null;
+	    // Find candidates by firstName from the User entity
+	    return candidateRepository.findByUserFirstName(firstName); // Ensure repository has this method
 	}
+
+	@Override
+	public Candidate getCandidateWithApplications(Long id) {
+        return candidateRepository.findCandidateWithApplications(id);
+    }
+	public List<Candidate> findCandidatesByFirstName(String firstName) {
+        return candidateRepository.findByUserFirstName(firstName);
+    }
 
 	@Override
 	public List<Candidate> findByCompany(String company) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	@Override
-	public Candidate getCandidateWithApplications(Long id) {
-        return candidateRepository.findCandidateWithApplications(id);
-    }
 }

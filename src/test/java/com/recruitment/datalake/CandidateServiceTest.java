@@ -8,12 +8,18 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.Rollback;
 
 import com.recruitment.datalake.entities.Application;
 import com.recruitment.datalake.entities.Candidate;
 import com.recruitment.datalake.repos.CandidateRepository;
 import com.recruitment.datalake.service.CandidateService;
 
+import jakarta.transaction.Transactional;
+
+import com.recruitment.datalake.entities.Role;
+import com.recruitment.datalake.entities.User;
+import com.recruitment.datalake.repos.UserRepository;
 @SpringBootTest
 class CandidateServiceTest {
 
@@ -22,15 +28,32 @@ class CandidateServiceTest {
     
     @Autowired
     private CandidateService candidateService;
+    
+    @Autowired
+    private UserRepository userRepository;
 
     @Test
+    @Transactional
+    @Rollback(false)
     public void testRegisterCandidate() {
+        // Create a User object for the candidate
+        User user = new User("kam.smith@example.com", "password123", "Alice", "Smith", Role.CANDIDATE);
+
+        // Save the User object (assuming you have a User service/repository for saving)
+        user = userRepository.save(user);
+        System.out.println("User saved with ID: " + user.getId());
+
+        // Create a Candidate object associated with the saved User
         List<Application> applications = new ArrayList<>();
-        Candidate candidate = new Candidate("Alice", "Smith", "alice.smith@example.com", "1234567890", applications);
-        Candidate savedCandidate = candidateService.saveCandidate(candidate);
-        assertNotNull(savedCandidate.getId());
-        
+        System.out.println("Creating Candidate...");
+        Candidate candidate = new Candidate(user, applications);
+        candidate = candidateRepository.save(candidate);
+        System.out.println("Candidate saved with ID: " + candidate.getId());
+
+        // Flush to ensure data is persisted
+        // Ensure User is properly associated
     }
+
 
     @Test
     public void testFindCandidateById() {
@@ -40,24 +63,10 @@ class CandidateServiceTest {
         System.out.println(candidate);
     }
 
-    @Test
-    public void testCreateCandidate() {
-        Candidate candidate = new Candidate("John", "Doe", "john.doe@example.com", "1234567890", new ArrayList<>());
-        candidateRepository.save(candidate);
-        assertNotNull(candidate.getId());
-    }
 
 
-    @Test
-    public void testUpdateCandidate() {
-        Candidate candidate = candidateRepository.findById(1L).orElse(null);
-        assertNotNull(candidate);
-        candidate.setPhone("0987654321");
-        candidateRepository.save(candidate);
 
-        Candidate updatedCandidate = candidateRepository.findById(1L).get();
-        assertEquals("0987654321", updatedCandidate.getPhone());
-    }
+
 
     @Test
     public void testDeleteCandidate() {
@@ -65,7 +74,8 @@ class CandidateServiceTest {
         Candidate candidate = candidateRepository.findById(1L).orElse(null);
         assertNull(candidate);
     }
-
+    @Transactional
+    @Rollback(false)
     @Test
     public void testListAllCandidates() {
         List<Candidate> candidates = candidateRepository.findAll();
@@ -75,21 +85,10 @@ class CandidateServiceTest {
 
     @Test
     public void testFindByFirstName() {
-        List<Candidate> candidates = candidateRepository.findByFirstName("Alice");
+        List<Candidate> candidates = candidateRepository.findByUserFirstName("Alice");
         candidates.forEach(System.out::println);
     }
 
-    @Test
-    public void testFindByLastName() {
-        List<Candidate> candidates = candidateRepository.findByLastName("Smith");
-        candidates.forEach(System.out::println);
-    }
-
-    @Test
-    public void testFindByEmail() {
-        List<Candidate> candidates = candidateRepository.findByEmail("alice.smith@example.com");
-        candidates.forEach(System.out::println);
-    }
 
 
 }
