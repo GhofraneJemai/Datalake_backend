@@ -79,11 +79,19 @@ public class ApplicationRESTController {
     public ResponseEntity<Application> updateApplicationStatus(
             @PathVariable Long id,
             @RequestParam String status,
-            @RequestParam String recruitmentDate) {
-        LocalDateTime recruitmentDateTime = LocalDateTime.parse(recruitmentDate);
+            @RequestParam(required = false) String recruitmentDate) {
+
+        LocalDateTime recruitmentDateTime = null;
+        
+        // Parse the recruitmentDate only if it's provided
+        if (recruitmentDate != null && !recruitmentDate.isEmpty()) {
+            recruitmentDateTime = LocalDateTime.parse(recruitmentDate);
+        }
+
         Application updatedApplication = applicationService.updateApplicationStatus(id, status, recruitmentDateTime);
         return ResponseEntity.ok(updatedApplication);
     }
+
     @GetMapping("/by-candidate")
     public ResponseEntity<List<Application>> getApplicationsByCandidateId(@RequestParam Long candidateId) {
         List<Application> applications = applicationService.getApplicationsByCandidateId(candidateId);

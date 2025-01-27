@@ -36,7 +36,8 @@ public class AuthService {
         }
 
         
-        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId());
+        String token = jwtUtil.generateToken(user.getEmail(), user.getRole(), user.getId(), user.getFirstName() , user.getLastName());
+
         System.out.println("Token generated for email: " + user.getEmail());
         return token;
     }

@@ -18,16 +18,19 @@ public class JwtUtil {
 
     // Generate a JWT token
  // Generate a JWT token with user ID
-    public String generateToken(String email, Role role, Long userId) {
+    public String generateToken(String email, Role role, Long userId, String firstName, String lastName) {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
+        String fullName = firstName + " " + lastName; // Concatenate first and last name
+
         return JWT.create()
-                .withSubject(email) // Set the subject (email)
-                .withClaim("role", role.name()) // Add role as a custom claim
-                .withClaim("userId", userId) // Add userId as a custom claim
-                .withIssuedAt(new Date()) // Set issue date
-                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime)) // Set expiration date
-                .sign(algorithm); // Sign the token with the algorithm
+                .withSubject(email)
+                .withClaim("role", role.name())
+                .withClaim("userId", userId)
+                .withClaim("name", fullName) // Add full name as a claim
+                .withIssuedAt(new Date())
+                .withExpiresAt(new Date(System.currentTimeMillis() + expirationTime))
+                .sign(algorithm);
     }
 
 

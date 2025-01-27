@@ -2,6 +2,7 @@ package com.recruitment.datalake.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -35,10 +36,11 @@ public class SecurityConfig {
                         .requestMatchers("/api/candidates/**").permitAll()
                         .requestMatchers("/api/jobposts/**").permitAll()
                         .requestMatchers("/api/employes/**").permitAll()
-  
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  
                         .anyRequest().authenticated()
                         .and()
-                        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class));
+                        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class))
+        				.cors();
 
         return http.build(); // Using SecurityFilterChain to configure HTTP security
     }
