@@ -17,5 +17,7 @@ public interface ApplicationService {
     Map<JobPost, List<Application>> getApplicationsGroupedByJobPost();
 	Map<JobPost, List<Application>> getApplicationsGroupedByJobPostWithCandidates();
 	List<Application> getAllApplicationsWithDetails();
+	void deleteApplication(Long id);
+	Application updateCandidateInfo(Long applicationId, String coverLetter, String cvUrl); 
 
 }

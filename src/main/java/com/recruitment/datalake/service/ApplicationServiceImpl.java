@@ -96,5 +96,21 @@ public class ApplicationServiceImpl implements ApplicationService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public Application updateCandidateInfo(Long applicationId, String coverLetter, String cvUrl) {
+	    Application application = applicationRepository.findById(applicationId)
+	            .orElseThrow(() -> new RuntimeException("Application not found"));
+
+	    application.setCoverLetter(coverLetter);
+	    application.setCvUrl(cvUrl);
+	    
+	    return applicationRepository.save(application);
+	}
+	public void deleteApplication(Long id) {
+	    Application application = applicationRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Application not found"));
+
+	    applicationRepository.delete(application);
+	}
+
 
 }

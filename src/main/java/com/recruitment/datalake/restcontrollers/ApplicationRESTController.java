@@ -133,6 +133,39 @@ public class ApplicationRESTController {
     public List<Application> getAllApplications() {
         return applicationService.getAllApplicationsWithDetails();
     }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteApplication(@PathVariable Long id) {
+        try {
+            applicationService.deleteApplication(id);
+            return ResponseEntity.ok("Application deleted successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete application.");
+        }
+    }
+
+    // ✅ Modifier les informations du candidat (coverLetter, cvUrl)
+    @PutMapping("/update/{id}")
+    public ResponseEntity<Application> updateCandidateInfo(
+            @PathVariable Long id,
+            @RequestParam String coverLetter,
+            @RequestParam("cvFile") MultipartFile cvFile) {
+
+        try {
+            String fileName = UUID.randomUUID().toString() + "_" + cvFile.getOriginalFilename();
+            Path filePath = Paths.get(UPLOAD_DIR, fileName);
+            Files.createDirectories(filePath.getParent());
+            Files.write(filePath, cvFile.getBytes());
+
+            Application updatedApplication = applicationService.updateCandidateInfo(id, coverLetter, filePath.toString());
+            return ResponseEntity.ok(updatedApplication);
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(null);
+        }
+    }
+
+
 
 
 }
