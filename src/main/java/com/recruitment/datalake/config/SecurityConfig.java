@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/candidates/**").permitAll()
                         .requestMatchers("/api/jobposts/**").permitAll()
                         .requestMatchers("/api/employes/**").permitAll()
+                        .requestMatchers("/uploads/**").permitAll()
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()  
                         .anyRequest().authenticated()
                         .and()
