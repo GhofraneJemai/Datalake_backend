@@ -83,4 +83,9 @@ public class EmployeServiceImpl implements EmployeService {
     public List<Employe> sortByFirstNameAndCompany() {
         return EmployeRepository.sortByFirstNameAndCompany();
     }
+    @Override
+    public Employe findByEmail(String email) {
+        return EmployeRepository.findByEmail(email); // Implémentation dépendante de votre repository
+    }
+
 } 

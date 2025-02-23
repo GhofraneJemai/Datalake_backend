@@ -14,7 +14,7 @@ public interface EmployeService {
     Employe getEmployeById(Long id);
 
     List<Employe> getAllEmployes();
-
+    Employe findByEmail(String email);
     List<Employe> findByFirstName(String firstName);
 
     List<Employe> findByCompany(String company);

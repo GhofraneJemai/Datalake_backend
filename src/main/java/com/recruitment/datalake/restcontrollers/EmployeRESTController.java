@@ -27,10 +27,21 @@ public class EmployeRESTController {
 	 @Autowired
 	    private EmployeService employeService;
 
-	    @PostMapping
-	    public Employe createEmploye(@RequestBody Employe employe) {
-	        return employeService.saveEmploye(employe);
-	    }
+		 @PostMapping
+		 public ResponseEntity<Employe> createEmploye(@RequestBody Employe employe) {
+		     // Vérifiez si l'employé existe déjà, par exemple en fonction de son email ou d'un autre attribut unique
+		     Employe existingEmploye = employeService.findByEmail(employe.getEmail());  // Exemple avec l'email
+	
+		     if (existingEmploye != null) {
+		         // Si l'employé existe déjà, retourner une réponse avec un message d'erreur
+		         return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+		     }
+	
+		     // Si l'employé n'existe pas, le créer et le sauvegarder
+		     Employe savedEmploye = employeService.saveEmploye(employe);
+		     return ResponseEntity.status(HttpStatus.CREATED).body(savedEmploye);
+		 }
+
 
 	    @GetMapping("/{id}")
 	    public Employe getEmployeById(@PathVariable Long id) {
@@ -44,21 +55,27 @@ public class EmployeRESTController {
 
 	    @PutMapping("/{id}")
 	    public ResponseEntity<Employe> updateEmploye(@PathVariable Long id, @RequestBody Employe employe) {
-	        // Ensure the employee ID in the body matches the path ID
-	        employe.setId(id);  
+	        // Vérifier si l'email est déjà utilisé par un autre employé
+	        Employe existingEmploye = employeService.findByEmail(employe.getEmail());
+	        
+	        if (existingEmploye != null && !existingEmploye.getId().equals(id)) {
+	            // Si un autre employé utilise déjà cet email, retourner une erreur
+	            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+	        }
 
-	        // Update the employee by calling the service
+	        // S'assurer que l'ID de l'employé correspond à celui du path
+	        employe.setId(id);
+
+	        // Mise à jour de l'employé
 	        Employe updatedEmploye = employeService.updateEmploye(employe);
 
-	        // Check if the employee was updated
 	        if (updatedEmploye != null) {
-	            // Return the updated employee with a 200 OK response
 	            return ResponseEntity.ok(updatedEmploye);
 	        } else {
-	            // Return 404 Not Found if the employee does not exist
 	            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
 	        }
 	    }
+
 
 
 	    @DeleteMapping("/{id}")

@@ -16,6 +16,7 @@ public interface EmployeRepository extends JpaRepository<Employe, Long> {
     List<Employe> findByCompany(String company);
 
     List<Employe> findByOrderByFirstNameAsc();
+    Employe findByEmail(String email); 
 
     @Query("SELECT e FROM Employe e ORDER BY e.firstName ASC, e.company ASC")
     List<Employe> sortByFirstNameAndCompany();
